@@ -1,5 +1,6 @@
 import pymysql
 from utils.AESUtil import *
+import yaml
 
 
 class MySQL:
@@ -7,6 +8,9 @@ class MySQL:
         self.conn = None
         self.cursor = None
         self.soft = None
+        with open('resource/database.yml', 'r') as yml:
+            mysql_dict = yaml.safe_load(yml)
+            self.mysql_data = mysql_dict["MySQL"]
 
     """
     连接数据库并返回一个游标
@@ -14,11 +18,11 @@ class MySQL:
 
     def connect(self):
         conn = pymysql.connect(
-            host='127.0.0.1',
-            port=3306,
-            user='root',
-            password='root',
-            database='xinjian'
+            host=self.mysql_data["host"],
+            port=self.mysql_data["port"],
+            user=self.mysql_data["user"],
+            password=self.mysql_data["passwd"],
+            database=self.mysql_data["database"]
         )
         self.conn = conn
 
@@ -97,12 +101,3 @@ class MySQL:
                 return result
             except Exception as ex:
                 print(ex)
-
-
-if __name__ == '__main__':
-    mysql = MySQL()
-    mysql_cursor = mysql.connect()
-    user_data = {
-        "id": 1
-    }
-    mysql.get_user_info(user_data)
