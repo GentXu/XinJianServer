@@ -98,6 +98,8 @@ class MySQL:
                 self.cursor.execute(sql, (data["user"]))
                 result = self.cursor.fetchone()
                 print(result)
+                if result is None:
+                    return []
                 return result
             except Exception as ex:
                 print(ex)

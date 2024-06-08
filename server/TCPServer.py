@@ -74,13 +74,18 @@ class TCPServer:
                 })
             case {"method": "get_user_info"}:
                 sql_tuple = self.mysql.get_user_info(dict_data)
-                sql_result = json.dumps({
-                    "id": sql_tuple[0],
-                    "user": sql_tuple[1],
-                    "name": sql_tuple[2],
-                    "xb": sql_tuple[4],
-                    "birthday": sql_tuple[5],
-                    "motto": sql_tuple[6],
-                    "ip": sql_tuple[7]
-                })
+                try:
+                    sql_result = json.dumps({
+                        "id": sql_tuple[0],
+                        "user": sql_tuple[1],
+                        "name": sql_tuple[2],
+                        "xb": sql_tuple[4],
+                        "birthday": sql_tuple[5],
+                        "motto": sql_tuple[6],
+                        "ip": sql_tuple[7]
+                    })
+                except IndexError:
+                    sql_result = json.dumps({
+                        "name": "null"
+                    })
         channel.send(sql_result.encode('utf-8'))
